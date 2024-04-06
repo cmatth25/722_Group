@@ -1,6 +1,7 @@
 ## Phylogenetic Tree Construction
 
-https://upload.wikimedia.org/wikipedia/commons/0/0b/PhylogeneticTree%2C_Woese_1990.PNG?download
+![1200px-PhylogeneticTree,_Woese_1990](https://github.com/cmatth25/722_Group/assets/101157734/aac7c31f-dfc6-40c8-8360-9c3ec5728088)
+
 
 #### Sequences for alignment (or not)
 
