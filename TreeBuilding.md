@@ -1,21 +1,24 @@
 ## Phylogenetic Tree Construction
 
+https://upload.wikimedia.org/wikipedia/commons/0/0b/PhylogeneticTree%2C_Woese_1990.PNG?download
+
 #### Sequences for alignment (or not)
 
 Remember using 16S in the metagenomics tutorial for microbial identification? It's a great ortholog for phylogenetic tree making for the same reason.  
-Let's retrieve some 16S sequences from experimental isolates and some type strains to get a better idea what we're working with and where they fall in the Actinobacterial tree. (Sure, we could just BLAST them, but where's the fun in that?)
+Let's retrieve some 16S sequences from experimental isolates and some related type strains to get a better idea what we're working with and where they fall in the Actinobacterial tree. Here's a link to some rRNA sequences 
 
 ```
 {}
 ```
 
-Oftentimes, when we're dealing with species and strains, 16S just isn't enough (and I can confirm it simply isn't here either), so let's get 23S, part of the large ribosomal subunit, and concatenate the sequences for a multigene alignment. 
+Oftentimes, when we're dealing with species and especially at the strain level, 16S just isn't enough (and I can confirm it simply isn't here either), so let's get 23S, part of the large ribosomal subunit, and concatenate the sequences for a multigene alignment. 
 
 ```
 {}
 ```
+This could be done for many such selected marker genes, or the entire CDS translated into AA sequences. 
 
-An alternative method, building a concensus tree, would take many orthologous genes, construct trees from each gene, and the final tree would be the result of the plurality "vote" from each gene tree, but we would need many more than 2. Many tree building packages will pull out coding sequences from annotated genomes and allow for concatenated or concensus multigene trees. 
+An alternative aggregate method, building a concensus tree, would take many orthologous genes, construct trees from each gene, and the final tree would be the result of the plurality "vote" from each gene tree, but we would want many more than 2. Many tree building packages will pull out coding sequences from annotated genomes and allow for concatenated or concensus multigene trees. 
 
 Back to the point, we'll rename the fasta headers to make our final labels easier.
 
@@ -31,12 +34,13 @@ Let's align them and take a look.
 {}
 ```
 
-While there are plenty of good ways to handle gaps, but since we concatenated 2 genes, and things can get a little messy at either end, I'd like to remove them with trimAl. GBlocks is a more interactive alternative, if that's for you
+There are plenty of good ways to handle gaps but since we concatenated 2 genes, and things can get a little messy at either end, I'd like to remove them with trimAl. GBlocks is a more interactive alternative, if that's for you.
 
 ```
 #trimal
 {}
 ```
+OR
 ```
 #gblocks
 {}
@@ -53,12 +57,13 @@ AAAA**T**AAAA
 >seq2  
 AAAA**G**AAAA  
 
+The appropriate k-mer length isn't necessarily straightforward, but kSNP provides a tool, Kchooser, to search for the optimal length for your sequences and to assess the FCK, fraction of core k-mers. Core k-mers are those that appear in all of your sequences and reflects the diversity of samples, and the fraction of core k-mers is the core k-mers/all k-mers. Low FCK scores means your samples are very diverse. The higher the FCK, the more reliable your kSNP tree will be.
 
 ```
 {}
 ```
 
-kSNP will build a tree for us, which is great to get an idea of what the tree looks like, but it doesn't provide a lot of options or any visualization.
+kSNP will build a tree for us, which is great to get an idea of what the tree looks like, but it doesn't provide much in the way of tree building options or any visualization.
 
 ```
 {}
@@ -70,7 +75,9 @@ kSNP lacks much of the functionality of packages designed specifically for tree 
 {}
 ```
 
-If you want to dig into choosing optimal kmer length, some other kSNP functionality or a kSNP tree built from these samples' whole genomes, check out the Appendix.
+There's a link to a kSNP tree built from these samples' whole genomes to try and get a better idea about some of the very closely related species in the Appendix.
+
+For well characterized species, SNP databases are available
 
 #### Maximum liklihood tree with bootstrapping
 
