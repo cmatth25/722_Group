@@ -6,8 +6,8 @@
 
 #### Sequences for alignment (or not)
 
-Remember using 16S in the metagenomics tutorial for microbial identification? It's a great ortholog for phylogenetic tree making for the same reason.  
-Let's retrieve some 16S sequences from experimental isolates and some related type strains to get a better idea what we're working with and where they fall in the Actinobacterial tree. Here's a link to some rRNA sequences 
+Remember using 16S in the metagenomics tutorial for microbial identification? It's a great ortholog for phylogenetic tree making for the same reason. Carl Woese famously used 16S to differentiate between Bacteria and Archea using 16S and used the small rRNA subunit more generally to propose the above Tree of Life.
+Let's retrieve some 16S sequences from experimental isolates and some related type strains to get a better idea what we're working with and where they fall in the Actinobacterial tree. Here's a link to some rRNA sequences.
 
 ```
 {}
@@ -102,10 +102,31 @@ https://itol.embl.de/
 
 #### rRNA retrieval by barrnap
 
-This tool is available on compute canada and runs very quickly, extracting prokaryotic or eukaryotic rRNA sequences from unannotated genomes, outputting .gff or .fasta files.
+This tool is available on compute canada and runs very quickly, extracting prokaryotic or eukaryotic rRNA sequences from unannotated genomes, outputting .gff or .fasta files. Here's a bas
 
 ```
-{}
+{
+#!/bin/bash
+module load StdEnv/2020
+module load barrnap/0.9
+
+# variable 1 is complete path to directory containing sequences, including final "/"
+
+for file in ${1}*.fna
+do
+        barrnap --kingdom bac --threads 15 --outseq ${file::-4}_rrna.fna < ${file} > ${file::-4}_rrna.gff
+done
+
+for file in ${1}*_rrna.fna
+do
+  cat ${file::-9}_rrna.fna | grep -A 1 '^>16' | head -n 2 > ${file::-9}_16S.fna
+  cat ${file::-9}_rrna.fna | grep -A 1 '^>23' | head -n 2 > ${file::-9}_23S.fna
+        paste -d'\0' ${file::-9}_16S.fna  ${file::-9}_23S.fna > ${file::-9}_combinedS.fna
+done
+mv *S.fna 16_23S/
+
+
+}
 ```
 
 #### GOI
