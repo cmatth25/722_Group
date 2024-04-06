@@ -10,22 +10,40 @@ Remember using 16S in the metagenomics tutorial for microbial identification? It
 Let's retrieve some 16S sequences from experimental isolates and some related type strains to get a better idea what we're working with and where they fall in the Actinobacterial tree. Here's a link to some rRNA sequences.
 
 ```
-{}
+ln #CRAIG, 16S directory here
 ```
 
 Oftentimes, when we're dealing with species and especially at the strain level, 16S just isn't enough (and I can confirm it simply isn't here either), so let's get 23S, part of the large ribosomal subunit, and concatenate the sequences for a multigene alignment. 
 
 ```
-{}
+ln #Craig, 23S directory here
 ```
-This could be done for many such selected marker genes, or the entire CDS translated into AA sequences. 
+Lets check to make sure we've only got 1 sequence (sometimes barrnap isolates multiple rRNA sequences) in each file.
+```
+for file in *S.fna; do echo "${file}"; grep '^>' ${file} | wc -l; done
+```
+While we're at it, let's check they're about the right length, 16S is ~1.5 kb and 23S is ~3 kb with some variability
+```
+for file in *S.fna; do echo "${file}"; grep -v '^>' ${file} | wc -c; done
+```
+Alright, let's concatenate
+```
+for file in `ls *_16S.fna | sed 's/_16S.fna//g'`; do paste -d'\0' ${file}_16S.fna  ${file}_23S.fna > ${file}_combinedS.fna; done
+mkdir 16S_23S/
+mv *combinedS.fna 16_23S/
+```
+This could be done for many such selected marker genes, or some alignments take the entire CDS translated into AA sequences. 
 
 An alternative aggregate method, building a concensus tree, would take many orthologous genes, construct trees from each gene, and the final tree would be the result of the plurality "vote" from each gene tree, but we would want many more than 2. Many tree building packages will pull out coding sequences from annotated genomes and allow for concatenated or concensus multigene trees. 
 
-Back to the point, we'll rename the fasta headers to make our final labels easier.
+Back to the point,  and then rename the fasta headers to make our final labels easier.
 
 ```
-{}
+
+```
+files should list followed by a count of fasta headers
+```
+for file in *dS.fna; do sed -i "1s/.*/>${file%.fna}/" $file; done
 ```
 
 If you want a better idea of how I extracted these sequences from unannotated genome assemblies, check out the Appendix.
@@ -105,7 +123,6 @@ https://itol.embl.de/
 This tool is available on compute canada and runs very quickly, extracting prokaryotic or eukaryotic rRNA sequences from unannotated genomes, outputting .gff or .fasta files. Here's a bas
 
 ```
-{
 #!/bin/bash
 module load StdEnv/2020
 module load barrnap/0.9
@@ -125,8 +142,6 @@ do
 done
 mv *S.fna 16_23S/
 
-
-}
 ```
 
 #### GOI
