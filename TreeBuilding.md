@@ -18,13 +18,9 @@ Oftentimes, when we're dealing with species and especially at the strain level, 
 ```
 ln #Craig, 23S directory here
 ```
-Lets check to make sure we've only got 1 sequence (sometimes barrnap isolates multiple rRNA sequences) in each file.
+Lets check to make sure we've only got 1 sequence (sometimes barrnap isolates multiple rRNA sequences) in each file. While we're at it, let's check they're about the right length, 16S is ~1.5 kb and 23S is ~3 kb with some variability
 ```
-for file in *S.fna; do echo "${file}"; grep '^>' ${file} | wc -l; done
-```
-While we're at it, let's check they're about the right length, 16S is ~1.5 kb and 23S is ~3 kb with some variability
-```
-for file in *S.fna; do echo "${file}"; grep -v '^>' ${file} | wc -c; done
+for file in *S.fna; do echo "${file}" | tr '\n' '\t'; grep '^>' ${file} | wc -l | tr '\n' '\t';  grep -v '^>' ${file} | wc -c; done
 ```
 Alright, let's concatenate
 ```
@@ -36,34 +32,44 @@ This could be done for many such selected marker genes, or some alignments take 
 
 An alternative aggregate method, building a concensus tree, would take many orthologous genes, construct trees from each gene, and the final tree would be the result of the plurality "vote" from each gene tree, but we would want many more than 2. Many tree building packages will pull out coding sequences from annotated genomes and allow for concatenated or concensus multigene trees. 
 
-Back to the point,  and then rename the fasta headers to make our final labels easier.
+Back to the point, let's rename the fasta headers to make our final labels easier.
 
-```
-
-```
-files should list followed by a count of fasta headers
 ```
 for file in *dS.fna; do sed -i "1s/.*/>${file%.fna}/" $file; done
 ```
 
-If you want a better idea of how I extracted these sequences from unannotated genome assemblies, check out the Appendix.
+If you want a better idea of how I extracted these sequences from unannotated genome assemblies, check out the Appendix, where O also give an example with an annotated genome.
 
-Let's align them and take a look.  
+Let's pull them together into a multi-fasta file simply using cat, align them with muscle (various aligners such as maaft or clustal could work here) and take a look.  
 
 ```
-{}
+cat *dS.fna > 16S_23S_multi.fna
+```
+```
+muscle -in *_multi.fna -out 16S_23S_al.afa
+```
+Phylip can also handle alighnment in a user friendly way and outputs alignment in the the frequently used .phy format
+
 ```
 
-There are plenty of good ways to handle gaps but since we concatenated 2 genes, and things can get a little messy at either end, I'd like to remove them with trimAl. GBlocks is a more interactive alternative, if that's for you.
+```
+
+Taking a closer look at the alignment, you'll see things get a bit messy at either end and where the genes have been concatenated together 
+
+```
+less 16S_23S_al.afa
+```
+
+There are plenty of good ways to handle gaps but since we concatenated 2 genes, and things can get a little messy at either end, I'd like to remove the heavily gapped areas them with trimAl. GBlocks is a more interactive alternative, if that's for you.
 
 ```
 #trimal
-{}
+/usr/local-centos6/trimAl/trimAlv1.4/source/trimal -in combined_alignment.afa -out combined_alignment_trimal.afa -fasta -gt 0.1
 ```
 OR
 ```
-#gblocks
-{}
+#Gblocks
+/usr/local-centos6/Gblocks/Gblocks
 ```
 
 #### SNP identification
@@ -79,8 +85,16 @@ AAAA**G**AAAA
 
 The appropriate k-mer length isn't necessarily straightforward, but kSNP provides a tool, Kchooser, to search for the optimal length for your sequences and to assess the FCK, fraction of core k-mers. Core k-mers are those that appear in all of your sequences and reflects the diversity of samples, and the fraction of core k-mers is the core k-mers/all k-mers. Low FCK scores means your samples are very diverse. The higher the FCK, the more reliable your kSNP tree will be.
 
+Note, kSNP4.1pgk needs adding to path to use Kchooser because it is "a stupid program". An opinion I'm coming around on, honestly. 
+
+It is our last class and Ben mentioned showing the class adding a vairable to the path so...
 ```
-{}
+echo 'export PATH=/usr/local/kSNP/kSNP4:$PATH' >>~/.bash_profile
+```
+">>" to append is VERY important here. When in doubt, use your text editor of choice so you don't accidently mess **everything** up.
+source bash profile to make sure it's added to your path now, but moving forward when you login you should be good to go.
+```
+source ~/.bash_profile
 ```
 
 kSNP will build a tree for us, which is great to get an idea of what the tree looks like, but it doesn't provide much in the way of tree building options or any visualization.
