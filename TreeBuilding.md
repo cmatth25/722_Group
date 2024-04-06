@@ -2,7 +2,7 @@
 
 #### Sequences for alignment (or not)
 
-Remember using 16S in the metagenomics tutorial for microbial identification? It's a great ortholog for the same reason.  
+Remember using 16S in the metagenomics tutorial for microbial identification? It's a great ortholog for phylogenetic tree making for the same reason.  
 Let's retrieve some 16S sequences from experimental isolates and some type strains to get a better idea what we're working with and where they fall in the Actinobacterial tree. (Sure, we could just BLAST them, but where's the fun in that?)
 
 ```
@@ -44,7 +44,7 @@ While there are plenty of good ways to handle gaps, but since we concatenated 2 
 
 #### SNP identification
 
-Alignments are great and there are various packages to pull out SNPs from alignments or compared to a reference sequence (we'll plug that alignment in a little later) but what if we want to compare the genomes of organisms that are not closely related and alignments aren't reliable? How do we identify orthologs or SNPs?
+Alignments are great and there are various packages to pull out SNPs from alignments or compared to a reference sequence (we'll plug that alignment in a little later) but what if we want to compare the genomes of organisms where alignments aren't reliable? Microbial genomes are rife HGT, making alignments difficult or computationally expensive. How do we identify orthologs or SNPs?
 
 We can use a split k-mer approach offered by kSNP. kSNP finds all kmers of k length for each sequence and identifies kmers that differ at exactly the mid-point. k=9 example below.
 
