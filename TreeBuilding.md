@@ -25,7 +25,11 @@ for file in *S.fna; do echo "${file}" | tr '\n' '\t'; grep '^>' ${file} | wc -l 
 Alright, let's concatenate
 ```
 for file in `ls *_16S.fna | sed 's/_16S.fna//g'`; do paste -d'\0' ${file}_16S.fna  ${file}_23S.fna > ${file}_combinedS.fna; done
+```
+```
 mkdir 16S_23S/
+```
+```
 mv *combinedS.fna 16_23S/
 ```
 This could be done for many such selected marker genes, or some alignments take the entire CDS translated into AA sequences. 
