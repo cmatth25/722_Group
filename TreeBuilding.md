@@ -76,7 +76,9 @@ OR
 
 Alignments are great and there are various packages to pull out SNPs from alignments or compared to a reference sequence (we'll plug that alignment in a little later) but what if we want to compare the genomes of organisms where alignments aren't reliable? Microbial genomes are rife HGT, making alignments difficult or computationally expensive. How do we identify orthologs or SNPs?
 
-We can use a split k-mer approach offered by kSNP. kSNP finds all kmers of k length for each sequence and identifies kmers that differ at exactly the mid-point. k=9 example below.
+Hopefully everyone remembers k-mers from the first metagenomics tutorial. Where kraken used exact k-mer matches (k-mer length 35) to classify sequences to a taxonomic rank based on a database, here kSNP uses split k-mers.
+
+kSNP finds all kmers of k length for each sequence and identifies kmers that differ at exactly the mid-point. k=9 example below.
 
 >seq1  
 AAAA**T**AAAA  
@@ -88,14 +90,39 @@ The appropriate k-mer length isn't necessarily straightforward, but kSNP provide
 Note, kSNP4.1pgk needs adding to path to use Kchooser because it is "a stupid program". An opinion I'm coming around on, honestly. 
 
 It is our last class and Ben mentioned showing the class adding a vairable to the path so...
+
+Before we mess around with your path in your .bash_profile, might as well take a look at what it's supposed to look like.
+
 ```
-echo 'export PATH=/usr/local/kSNP/kSNP4:$PATH' >>~/.bash_profile
+cat ~/.bash_profile
+```
+now we can add kSNP to your path
+```
+echo 'export PATH=/usr/local/kSNP/kSNP4.1pkg:$PATH' >>~/.bash_profile
 ```
 ">>" to append is VERY important here. When in doubt, use your text editor of choice so you don't accidently mess **everything** up.
+
 source bash profile to make sure it's added to your path now, but moving forward when you login you should be good to go.
 ```
 source ~/.bash_profile
 ```
+might as well take a quick look again
+```
+cat ~/.bash_profile
+```
+
+
+Before we can run Kchooser, we need an input file for kSNP (and Kchooser). kSNP comes with a build in untility for this(MakeKSNP4infile), but your unaligned files need to be the only thing in the directory. Instead you can run this in the directory with your files and whatever else you want:
+
+```
+for file in `ls *dS.fna `; do echo "$PWD/${file}        ${file::-4}" >> kSNP_input.txt;  done
+```
+now Kchooser can tell us what k-mer value to use and whether or not it's a good idea to run kSNP at all. It probably isn't because we have an alignment already and these sequences are short and well conserved but we'll continue on to familiarize you with some genome scale tools. 
+```
+
+```
+
+I seem to remember being told this is a bad idea before, but I think that was before I ran any code at all. Alas, we carry on. 
 
 kSNP will build a tree for us, which is great to get an idea of what the tree looks like, but it doesn't provide much in the way of tree building options or any visualization.
 
