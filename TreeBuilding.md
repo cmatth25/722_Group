@@ -201,25 +201,19 @@ do
   cat ${file::-9}_rrna.fna | grep -A 1 '^>23' | head -n 2 > ${file::-9}_23S.fna
         paste -d'\0' ${file::-9}_16S.fna  ${file::-9}_23S.fna > ${file::-9}_combinedS.fna
 done
+mkdir 16_23S/
 mv *S.fna 16_23S/
 
 ```
 
 #### GOI
 
-If you're looking for something else, there may be a specific tool similar to barrnap. Alternatively, if your genome is annotated you can use gffread (in cufflinks on info).
+If you're looking for something else, there may be a specific tool similar to barrnap. Alternatively, if your genome is annotated you can usefaidx.
 
 ```
-{/usr/local-centos6/cufflinks1.1.0/gffread -}
+{/usr/local-centos6/cufflinks1.1.0/ -}
 ```
 
-#### kSNP, kChooser
-
-What's the appropriate kmer length for kSNP? We'll it depends. Luckily, they made a tool for that too, kChooser.
-
-```
-{}
-```
 
 ##### whole genome example using the tools covered here
 
