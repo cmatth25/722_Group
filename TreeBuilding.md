@@ -30,35 +30,35 @@ for file in `ls *_16S.fna | sed 's/_16S.fna//g'`; do paste -d'\0' ${file}_16S.fn
 mkdir 16S_23S/
 ```
 ```
-mv *combinedS.fna 16_23S/
+mv *dS.fna 16_23S/
 ```
+Might be worth checking that you've got your sequences together and they're all about ~4.5 kb using the same script as before.
+
 This could be done for many such selected marker genes, or some alignments take the entire CDS translated into AA sequences. 
 
 An alternative aggregate method, building a concensus tree, would take many orthologous genes, construct trees from each gene, and the final tree would be the result of the plurality "vote" from each gene tree, but we would want many more than 2. Many tree building packages will pull out coding sequences from annotated genomes and allow for concatenated or concensus multigene trees. 
 
-Back to the point, let's rename the fasta headers to make our final labels easier.
+
+Back to the point, let's rename the fasta headers to make our final labels easier. This makes things easier for the sake of labelling but is not necessarily advisable since you may be losing some information, but since the paste function to add 16S and 23S together messed it up anyways, you might at least want to re add accurate metadata.
 
 ```
-for file in *dS.fna; do sed -i "1s/.*/>${file%.fna}/" $file; done
+for file in *dS.fna; do sed -i "1s/.*/>${file%_combinedS.fna}/" $file; done
 ```
 
-If you want a better idea of how I extracted these sequences from unannotated genome assemblies, check out the Appendix, where O also give an example with an annotated genome.
+If you want a better idea of how I extracted these sequences from unannotated genome assemblies, check out the Appendix, where I also give an example with an annotated genome and samtools' faidx.
 
-Let's pull them together into a multi-fasta file simply using cat, align them with muscle (various aligners such as maaft or clustal could work here) and take a look.  
+Let's pull them together into a multi-fasta file simply using cat, align them with mafft (various aligners such as muscle or clustal could work here but take a bit longer) and take a look.  
 
 ```
 cat *dS.fna > 16S_23S_multi.fna
 ```
 ```
-muscle -in *_multi.fna -out 16S_23S_al.afa
-```
-Phylip can also handle alighnment in a user friendly way and outputs alignment in the the frequently used .phy format
-
+/usr/local/muscle/muscle5.1.linux_intel64 -align *_multi.fna -output 16S_23S_al.afa
 ```
 
-```
+You'll want to note that whether you have phylip or fasta alignments, if your sequences didn't already have line breaks, they will now. 
 
-Taking a closer look at the alignment, you'll see things get a bit messy at either end and where the genes have been concatenated together 
+Taking a closer look at the alignment, you'll see things get a bit messy at either end and where the genes have been concatenated together.
 
 ```
 less 16S_23S_al.afa
@@ -68,7 +68,7 @@ There are plenty of good ways to handle gaps but since we concatenated 2 genes, 
 
 ```
 #trimal
-/usr/local-centos6/trimAl/trimAlv1.4/source/trimal -in combined_alignment.afa -out combined_alignment_trimal.afa -fasta -gt 0.1
+/usr/local-centos6/trimAl/trimAlv1.4/source/trimal -in 16S_23S_al.afa -out 16S_23S_trimal.afa -fasta -gt 0.25
 ```
 OR
 ```
@@ -123,22 +123,28 @@ for file in `ls *dS.fna `; do echo "$PWD/${file}        ${file::-4}" >> kSNP_inp
 ```
 now Kchooser can tell us what k-mer value to use and whether or not it's a good idea to run kSNP at all. It probably isn't because we have an alignment already and these sequences are short and well conserved but we'll continue on to familiarize you with some genome scale tools. 
 ```
-
+/usr/local/kSNP/kSNP4.1pkg/Kchooser4 -in kSNP_input.txt
 ```
 
 I seem to remember being told this is a bad idea before, but I think that was before I ran any code at all. Alas, we carry on. 
 
 kSNP will build a tree for us, which is great to get an idea of what the tree looks like, but it doesn't provide much in the way of tree building options or any visualization.
-
 ```
-{}
+mkdir kSNP_out
 ```
+```
+/usr/local/kSNP/kSNP4.1pkg/kSNP4 -k 11 -in kSNP4_input.txt -min_frac 0.75 -core -vcf -NJ -outdir kSNP_out
+```
+-min_frac will provide outputs where only SNPs that appear in atleast 75% of the samples will be included and -core will provide outputs where only SNPs present in all samples are included.
 
-kSNP lacks much of the functionality of packages designed specifically for tree building, like bootstrapping or changing substitution models. Luckily it does provide an output we can plug into other software packages.
+-NJ will output a NJ tree and the distance matrix used to make it based on p-distance
+
+kSNP lacks much of the functionality of packages designed specifically for tree building, like bootstrapping or changing substitution models. Luckily it does provide an output we can plug into other software packages. -vcf outputs a variant call format file, a file commonly used in SNP analysis that provides info about the position, alleles, etc. I'm just going to stick with the fasta alignment for simplicity's sake.
 
 ```  
-{}
+
 ```
+
 
 There's a link to a kSNP tree built from these samples' whole genomes to try and get a better idea about some of the very closely related species in the Appendix.
 
@@ -147,9 +153,19 @@ For well characterized species, SNP databases are available
 #### Maximum liklihood tree with bootstrapping
 
 ```
-{}
+/usr/local-centos6/raxml/raxml-8.0.25/raxmlHPC FINISH ME -s
 ```
 
+
+For an oldie but a goodie, phylip can also handle distance matrices in a user friendly way with alignments in the .phy format, but in many ways this is tedious.
+a phy alignment is here from clustal omega
+```
+ln
+```
+but note that the labels are only 10 letters, so some meaning has been lost and I don't have the time right now to relabel them. Anyways, if you want to feel like you're a scientist in an 80's movie, you can have fun in the phylip program calculating a distance matrix here:
+```
+/usr/local-centos6/phylip/exe/dnadist
+```
 
 #### Visualize it
 
