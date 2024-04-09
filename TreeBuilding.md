@@ -133,21 +133,32 @@ mkdir kSNP_out
 
 -NJ will output a NJ tree and the distance matrix used to make it based on p-distance
 
-kSNP lacks much of the functionality of packages designed specifically for tree building, like bootstrapping or changing substitution models. Luckily it does provide an output we can plug into other software packages. -vcf outputs a variant call format file, a file commonly used in SNP analysis that provides info about the position, alleles, etc. I'm just going to stick with the fasta alignment for simplicity's sake.
-
-```  
-
+```
+cd kSNP_out/; less NJ.dist.matrix
 ```
 
+kSNP lacks much of the functionality of packages designed specifically for tree building, like bootstrapping or changing substitution models. Luckily it does provide an output we can plug into other software packages. -vcf outputs a variant call format file, a file commonly used in SNP analysis that provides info about the position, alleles, etc, which you are welcome to inspect. I'm just going to stick with the fasta alignment for simplicity's sake.
+
+You can see since I included -core and and -min_frac arguments, it's provided quite a number of outputs.
+
+```  
+less core_SNPs_matrix.fasta
+```
+```
+cat COUNT_coreSNPs
+```
+```
+less SNPs_in_majority0.75_matrix.fasta
+```
 
 There's a link to a kSNP tree built from these samples' whole genomes to try and get a better idea about some of the very closely related species in the Appendix.
 
-For well characterized species, SNP databases are available
+For well characterized species, SNP databases are available, and SNP-sites can pull SNPs from an alignment, such as the one we prepared ourselves earlier.
 
 #### Maximum liklihood tree with bootstrapping
 
 ```
-/usr/local-centos6/raxml/raxml-8.0.25/raxmlHPC FINISH ME -s
+/usr/local-centos6/
 ```
 
 
