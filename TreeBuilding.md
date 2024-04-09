@@ -176,9 +176,12 @@ You'll notice the model includes +ASC, that is to account for ascertainment bias
 ```
 cd ..
 ```
-We're going to try finding a root this time around and we're going to use the UFBoot2 (-B) to approximate 1000 bootstraps
+We're going to use the UFBoot2 (-B) to approximate 1000 bootstraps
 ```
 /usr/local-centos6/iqtree/version2.2/iqtree2 -s 16S_23S_trimal.afa -m GTR+F+I+I+R5 -B 1000
+```
+```
+less 16S_23S_trimal.afa.iqtree
 ```
 
 #### Visualize it
@@ -187,9 +190,7 @@ Great, now there are great software packages in the command line and R that can 
 
 https://itol.embl.de/
 
-```
-{}
-```
+Now let's try annotating.
 
 ## Appendix
 
