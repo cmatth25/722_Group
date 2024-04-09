@@ -53,7 +53,7 @@ Let's pull them together into a multi-fasta file simply using cat, align them wi
 cat *dS.fna > 16S_23S_multi.fna
 ```
 ```
-/usr/local/muscle/muscle5.1.linux_intel64 -align *_multi.fna -output 16S_23S_al.afa
+/usr/local-centos6/clustal/clustalo_1.2.4 -i 16S_23S_multi.fna --outfmt=fa -o 16S_23S_al.afa
 ```
 
 You'll want to note that whether you have phylip or fasta alignments, if your sequences didn't already have line breaks, they will now. 
