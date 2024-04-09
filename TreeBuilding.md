@@ -30,7 +30,7 @@ for file in `ls *_16S.fna | sed 's/_16S.fna//g'`; do paste -d'\0' ${file}_16S.fn
 mkdir 16S_23S/
 ```
 ```
-mv *dS.fna 16S_23S/
+mv *dS.fna 16S_23S/; cd 16S_23S/
 ```
 Might be worth checking that you've got your sequences together and they're all about ~4.5 kb using the same script as before.
 
