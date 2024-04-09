@@ -166,17 +166,19 @@ mkdir trees
 ```
 
 ```
-/usr/local-centos6/iqtree/version2.2/iqtree2 -s SNPs_in_majority0.75_matrix.fasta -m GTR+ASC -b 20
+/usr/local-centos6/iqtree/version2.2/iqtree2 -s SNPs_in_majority0.75_matrix.fasta -m GTR+ASC+R2 -b 20
 ```
-
+```
+less SNPs_in_majority0.75_matrix.fasta.iqtree
+```
 You'll notice the model includes +ASC, that is to account for ascertainment bias, because we've picked out all the variable sites and let behind invariable sites, we've biased the alignment and also increased the distances we would expect to find, since there will only be sites with variation. We've also included 20 bootstraps to support the tree, a number you would ideally have at least 100, if not thousands.
 
 ```
 cd ..
 ```
-
+We're going to try finding a root this time around and we're going to use the UFBoot2 (-B) to approximate 1000 bootstraps
 ```
-/usr/local-centos6/iqtree/version2.2/iqtree2 -m GTR -ufb 20 
+/usr/local-centos6/iqtree/version2.2/iqtree2 -s 16S_23S_trimal.afa -m GTR+F+I+I+R5 -B 1000 --root-test
 ```
 
 #### Visualize it
@@ -232,15 +234,16 @@ If you're looking for something else, there may be a specific tool similar to ba
 here's a link to a tree built with the code that follows
 
 ```
-{}
+ln-s /2/scratch/CraigM/Group/test/16S_23S/kSNP_out/WholeGenomekSNPIQtreeExample.iqtree
 ```
-
 the code that follows:
-
 ```
-{}
+/usr/local/kSNP/kSNP4.1pkg/kSNP4 -k 17 -in kSNP_input.txt -min_frac 0.75 -core -ML -NJ -outdir kSNP_out
 ```
-
+```
+/usr/local-centos6/iqtree/version2.2/iqtree2 -s ../../../Genomes/Assembled/kSNP_out/SNPs_in_majority0.75_matrix.fasta -m MFP -b 100 
+```
+This only took about ~18 min
 #### phylogenetic analaysis in R using APE
 
 ape is a great package for building trees from shorter sequences and alignments of smaller sample sizes and has great functionality (still much larger alignments and greater sequence numbers than this example, but will be much slower than many of the command line tools above).
@@ -248,14 +251,5 @@ ape is a great package for building trees from shorter sequences and alignments 
 Here's a little preliminary study of the 16S sequences using ape to calculate a p-distance matrix, pull out the max p-value to get an idea of what tree-building method would be appropriate, and go from there. 
 
 ```
-{}
-```
-For an oldie but a goodie, phylip can also handle distance matrices in a user friendly way with alignments in the .phy format, but in many ways this is tedious.
-a phy alignment is here from clustal omega
-```
-ln
-```
-but note that the labels are only 10 letters, so some meaning has been lost and I don't have the time right now to relabel them. Anyways, if you want to feel like you're a scientist in an 80's movie, you can have fun in the phylip program calculating a distance matrix here:
-```
-/usr/local-centos6/phylip/exe/dnadist
+
 ```
