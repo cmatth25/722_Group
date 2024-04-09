@@ -224,8 +224,12 @@ mv *S.fna 16_23S/
 
 If you're looking for something else, there may be a specific tool similar to barrnap. Alternatively, if your genome is annotated you can usefaidx.
 
+First search gff or other annotation file for your GOI
 ```
-{/usr/local-centos6/cufflinks1.1.0/ -}
+
+```
+```
+{faidx -}
 ```
 
 
