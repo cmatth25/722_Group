@@ -113,7 +113,7 @@ cat ~/.bash_profile
 Before we can run Kchooser, we need an input file for kSNP (and Kchooser). kSNP comes with a build in untility for this(MakeKSNP4infile), but your unaligned files need to be the only thing in the directory. Instead you can run this in the directory with your files and whatever else you want:
 
 ```
-for file in `ls *dS.fna `; do echo "$PWD/${file}        ${file::-4}" >> kSNP_input.txt;  done
+for file in `ls *dS.fna `; do echo -e "$PWD/${file}\t${file::-14}" >> kSNP_input.txt;  done
 ```
 now Kchooser can tell us what k-mer value to use and whether or not it's a good idea to run kSNP at all. It probably isn't because we have an alignment already and these sequences are short and well conserved but we'll continue on to familiarize you with some genome scale tools. 
 ```
