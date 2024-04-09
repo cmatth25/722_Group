@@ -157,19 +157,26 @@ For well characterized species, SNP databases are available, and SNP-sites can p
 
 #### Maximum liklihood tree with bootstrapping
 
+We're going to keep it relatively simple and build a couple of trees from the alignment and the SNPs.
+
+Let's start with SNPs
+
 ```
-/usr/local-centos6/
+mkdir trees
 ```
 
+```
+/usr/local-centos6/iqtree/version2.2/iqtree2 -s SNPs_in_majority0.75_matrix.fasta -m GTR+ASC -b 20
+```
 
-For an oldie but a goodie, phylip can also handle distance matrices in a user friendly way with alignments in the .phy format, but in many ways this is tedious.
-a phy alignment is here from clustal omega
+You'll notice the model includes +ASC, that is to account for ascertainment bias, because we've picked out all the variable sites and let behind invariable sites, we've biased the alignment and also increased the distances we would expect to find, since there will only be sites with variation. We've also included 20 bootstraps to support the tree, a number you would ideally have at least 100, if not thousands.
+
 ```
-ln
+cd ..
 ```
-but note that the labels are only 10 letters, so some meaning has been lost and I don't have the time right now to relabel them. Anyways, if you want to feel like you're a scientist in an 80's movie, you can have fun in the phylip program calculating a distance matrix here:
+
 ```
-/usr/local-centos6/phylip/exe/dnadist
+/usr/local-centos6/iqtree/version2.2/iqtree2 -m GTR -ufb 20 
 ```
 
 #### Visualize it
@@ -242,4 +249,13 @@ Here's a little preliminary study of the 16S sequences using ape to calculate a 
 
 ```
 {}
+```
+For an oldie but a goodie, phylip can also handle distance matrices in a user friendly way with alignments in the .phy format, but in many ways this is tedious.
+a phy alignment is here from clustal omega
+```
+ln
+```
+but note that the labels are only 10 letters, so some meaning has been lost and I don't have the time right now to relabel them. Anyways, if you want to feel like you're a scientist in an 80's movie, you can have fun in the phylip program calculating a distance matrix here:
+```
+/usr/local-centos6/phylip/exe/dnadist
 ```
