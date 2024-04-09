@@ -127,7 +127,7 @@ kSNP will build a tree for us, which is great to get an idea of what the tree lo
 mkdir kSNP_out
 ```
 ```
-/usr/local/kSNP/kSNP4.1pkg/kSNP4 -k 11 -in kSNP4_input.txt -min_frac 0.75 -core -vcf -NJ -outdir kSNP_out
+/usr/local/kSNP/kSNP4.1pkg/kSNP4 -k 11 -in kSNP_input.txt -min_frac 0.75 -core -vcf -NJ -outdir kSNP_out
 ```
 -min_frac will provide outputs where only SNPs that appear in atleast 75% of the samples will be included and -core will provide outputs where only SNPs present in all samples are included.
 
