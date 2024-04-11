@@ -193,7 +193,7 @@ You'll notice the model includes +ASC, that is to account for ascertainment bias
 ```
 less SNPs_in_majority0.75_matrix.fasta.iqtree
 ```
-Or for the just the tree, you can find it at the bottom in Newick format, which looks something like ((raccoon, bear),((sea_lion,seal),((monkey,cat), weasel)),dog)
+Or for the just the tree, you can find it at the bottom in Newick format, which looks something like ((raccoon, bear),((sea_lion,seal),((monkey,cat), weasel)),dog) and was named after a Restaurant in New Hampshire of all things.
 
 ```
 tail SNPs_in_majority0.75_matrix.fasta.iqtree
