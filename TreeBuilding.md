@@ -14,7 +14,7 @@ Let's retrieve some 16S sequences from experimental isolates and some related ty
 mkdir trees ; cd trees
 ```
 ```
-ln -s /2/scratch/CraigM/Group/test/*.fna . ; 
+ln -s /2/scratch/CraigM/Group/test/*.fna . 
 ```
 Lets check to make sure we've only got 1 sequence (barrnap may isolates multiple rRNA sequences) in each file. While we're at it, let's check they're about the right length, 16S is ~1.5 kb and 23S is ~3 kb with some variability.
 ```
