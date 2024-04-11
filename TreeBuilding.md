@@ -164,25 +164,28 @@ Let's start with SNPs
 ```
 mkdir trees
 ```
+First, let's test some of our tree building assumptions. I went through the MFP mode of iqtree that picks the best model for you based on log-liklihood scores and the Bayesian information criterion, which I won't get into. We can discuss the model it chose after.
+
+While good, tree building assumptions are TRSH: treelikeness(bases descend from the same bifurcating tree), reversibility (mutations are just as likely to occur in reverse), stationarity (base frequencies remain constant) and homogeneity (subsitution rates remain constant).
 
 ```
-/usr/local-centos6/iqtree/version2.2/iqtree2 -s SNPs_in_majority0.75_matrix.fasta -m GTR+ASC+R2 -b 20
+ /usr/local-centos6/iqtree/version2.2/iqtree2 -s SNPs_in_majority0.75_matrix.fasta -m GTR+ASC+R2 -b 20 --symtest-only 
+```
+
+```
+cat SNPs_in_majority0.75_matrix.fasta.symtest.csv
+```
+Now let's make a tree!
+
+```
+/usr/local-centos6/iqtree/version2.2/iqtree2 -s SNPs_in_majority0.75_matrix.fasta -m GTR+ASC+R2 -b 20 -redo
 ```
 ```
 less SNPs_in_majority0.75_matrix.fasta.iqtree
 ```
 You'll notice the model includes +ASC, that is to account for ascertainment bias, because we've picked out all the variable sites and let behind invariable sites, we've biased the alignment and also increased the distances we would expect to find, since there will only be sites with variation. We've also included 20 bootstraps to support the tree, a number you would ideally have at least 100, if not thousands.
 
-```
-cd ..
-```
-We're going to use the UFBoot2 (-B) to approximate 1000 bootstraps
-```
-/usr/local-centos6/iqtree/version2.2/iqtree2 -s 16S_23S_trimal.afa -m GTR+F+I+I+R5 -B 1000
-```
-```
-less 16S_23S_trimal.afa.iqtree
-```
+
 
 #### Visualize it
 
@@ -193,6 +196,32 @@ https://itol.embl.de/
 Now let's try annotating.
 
 ## Appendix
+
+### bad tree from alignment
+I wanted to play around with an alignment, in part because if we didn't use just a gene or 2 we would have been waiting all afternoon. Heres a tree from the alignment with partitions for each gene, worth noting if you're planning on making multigene alignment trees where different genes are best modelled differently. 16S and 23S we know have some peculiarities, so it should now these alignments break stationarity and homogeneity assumptions even with partitioning.
+
+```
+cd ..
+```
+Just so we didn't waste all that time We're going to use the UFBoot2 (-B) to approximate 1000 bootstraps
+```
+nano partition.txt
+```
+in partition.txt add the following, which defines the two genes. You can use partition to define base positions using a "\3" following the range of you CDS in frame (each position would look like. But I'm not sure about the reading frame here so don't do that. The program is smarter than me any ways and figures out what works best.
+part1 = 1-100\3, 2-101\3
+part2 = 3-102\3.
+```
+DNA, part1 = 1-1528
+DNA, part2 = 1529-4654
+```
+
+```
+/usr/local-centos6/iqtree/version2.2/iqtree2 -s 16S_23S_trimal.afa -m GTR+F+I+I+R5 -B 1000 
+```
+```
+less 16S_23S_trimal.afa.iqtree
+```
+
 
 #### rRNA retrieval by barrnap
 
