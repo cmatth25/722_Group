@@ -42,7 +42,7 @@ for file in *dS.fna; do sed -i "1s/.*/>${file%_combinedS.fna}/" $file; done
 ```
 head -n1 SID10270_combinedS.fna
 ```
-If you want a better idea of how I extracted these sequences from unannotated genome assemblies, check out the Appendix, where I also give an example with an annotated genome and samtools' faidx.
+If you want a better idea of how I extracted these sequences from unannotated genome assemblies, check out the Appendix.
 
 Let's pull them together into a multi-fasta file simply using cat, align them with mafft (various aligners such as muscle or clustal could work here but take a bit longer) and take a look.  
 
