@@ -197,6 +197,9 @@ https://itol.embl.de/
 
 Now let's try annotating.
 
+
+
+
 ## Appendix
 
 ### bad tree from alignment
@@ -258,7 +261,7 @@ mv *S.fna 16_23S/
 here's a link to a tree built with the code that follows
 
 ```
-ln-s /2/scratch/CraigM/Group/test/16S_23S/kSNP_out/WholeGenomekSNPIQtreeExample.iqtree
+ln-s /2/scratch/CraigM/Group/test/16S_23S/kSNP_out/WholeGenomekSNPIQtreeExample.iqtree .
 ```
 the code that follows:
 ```
