@@ -179,7 +179,6 @@ sym tests both, marginal symmetry tests stationarity and internal symmetry tests
 ```
  /usr/local-centos6/iqtree/version2.2/iqtree2 -s SNPs_in_majority0.75_matrix.fasta -m GTR+ASC+R2 -b 20 --symtest-only 
 ```
-If you have bad data that you feel you need to include, the suggestion is test the results with and without the bad data to ensure they're consistent.
 ```
 cat SNPs_in_majority0.75_matrix.fasta.symtest.csv
 ```
@@ -216,10 +215,12 @@ https://itol.embl.de/help/example_data.zip
 ### bad tree from alignment
 I wanted to play around with an alignment, in part because if we didn't use just a gene or 2 we would have been waiting all afternoon. Heres a tree from the alignment with partitions for each gene, worth noting if you're planning on making multigene alignment trees where different genes are best modelled differently. 16S and 23S we know have some peculiarities, so it should now these alignments break stationarity and homogeneity assumptions even with partitioning.
 
+If you have bad data that you feel you need to include, the suggestion is test the results with and without the bad data partitions to get an idea of how they're impacting the tree, ideally, they're not.
+
 ```
 cd ..
 ```
-Just so we didn't waste all that time We're going to use the UFBoot2 (-B) to approximate 1000 bootstraps
+Just so we didn't waste all that time aligning, we can look at partitioning the data alignment we made earlier. 
 ```
 nano partition.txt
 ```
@@ -230,7 +231,7 @@ part2 = 3-102\3.
 DNA, part1 = 1-1528
 DNA, part2 = 1529-4654
 ```
-
+We're going to use the UFBoot2 (-B) to approximate 1000 bootstraps, rather than actually performing them, its very fast, but again, an appproximation and not a true bootstrap. I didn't have time to look too deeply into it.
 ```
 /usr/local-centos6/iqtree/version2.2/iqtree2 -s 16S_23S_trimal.afa -m GTR+F+I+I+R5 -B 1000 
 ```
