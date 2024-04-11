@@ -110,7 +110,6 @@ might as well take a quick look again
 cat ~/.bash_profile
 ```
 
-
 Before we can run Kchooser, we need an input file for kSNP (and Kchooser). kSNP comes with a build in untility for this(MakeKSNP4infile), but your unaligned files need to be the only thing in the directory. Instead you can run this in the directory with your files and whatever else you want:
 
 ```
@@ -182,12 +181,16 @@ Now let's make a tree!
 ```
 /usr/local-centos6/iqtree/version2.2/iqtree2 -s SNPs_in_majority0.75_matrix.fasta -m GTR+ASC+R2 -b 20 -redo
 ```
+You'll notice the model includes +ASC, that is to account for ascertainment bias, because we've picked out all the variable sites and let behind invariable sites, we've biased the alignment and also increased the distances we would expect to find, since there will only be sites with variation. We've also included 20 bootstraps to support the tree, a number you would ideally have at least 100, if not thousands.
+
 ```
 less SNPs_in_majority0.75_matrix.fasta.iqtree
 ```
-You'll notice the model includes +ASC, that is to account for ascertainment bias, because we've picked out all the variable sites and let behind invariable sites, we've biased the alignment and also increased the distances we would expect to find, since there will only be sites with variation. We've also included 20 bootstraps to support the tree, a number you would ideally have at least 100, if not thousands.
+Or for the just the tree, you can find it at the bottom in Newick format, which looks something like ((raccoon, bear),((sea_lion,seal),((monkey,cat), weasel)),dog)
 
-
+```
+tail SNPs_in_majority0.75_matrix.fasta.iqtree
+```
 
 #### Visualize it
 
@@ -198,7 +201,8 @@ https://itol.embl.de/
 Now let's try annotating.
 
 
-
+iTOL annotation file templates: 
+https://itol.embl.de/help/example_data.zip 
 
 ## Appendix
 
