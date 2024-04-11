@@ -17,7 +17,7 @@ Lets check to make sure we've only got 1 sequence (barrnap may isolates multiple
 ```
 for file in *S.fna; do echo "${file}" | tr '\n' '\t'; grep '^>' ${file} | wc -l | tr '\n' '\t';  grep -v '^>' ${file} | wc -c; done
 ```
-Alright, let's concatenate
+Alright, let's concatenate... using paste
 ```
 for file in `ls *_16S.fna`; do paste -d'\0' ${file::-8}_16S.fna  ${file::-8}_23S.fna > ${file::-8}_combinedS.fna; done
 ```
