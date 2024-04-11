@@ -212,7 +212,7 @@ https://itol.embl.de/help/example_data.zip
 
 ## Appendix
 
-### bad tree from alignment
+### tree from alignment
 I wanted to play around with an alignment, in part because if we didn't use just a gene or 2 we would have been waiting all afternoon. Heres a tree from the alignment with partitions for each gene, worth noting if you're planning on making multigene alignment trees where different genes are best modelled differently. 16S and 23S we know have some peculiarities, so it should now these alignments break stationarity and homogeneity assumptions even with partitioning.
 
 If you have bad data that you feel you need to include, the suggestion is test the results with and without the bad data partitions to get an idea of how they're impacting the tree, ideally, they're not.
