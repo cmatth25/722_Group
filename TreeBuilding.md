@@ -282,12 +282,58 @@ the code that follows:
 /usr/local-centos6/iqtree/version2.2/iqtree2 -s ../../../Genomes/Assembled/kSNP_out/SNPs_in_majority0.75_matrix.fasta -m MFP -b 100 
 ```
 This only took about ~18 min
+
+
 #### phylogenetic analaysis in R using APE
 
-ape is a great package for building trees from shorter sequences and alignments of smaller sample sizes and has great functionality (still much larger alignments and greater sequence numbers than this example, but will be much slower than many of the command line tools above).
+ape is a great R package for building trees from shorter sequences and alignments of smaller sample sizes and has great functionality (still much larger alignments and greater sequence numbers than this example, but will be much slower than many of the command line tools above).
 
-Here's a little preliminary study of the 16S sequences using ape to calculate a p-distance matrix, pull out the max p-value to get an idea of what tree-building method would be appropriate, and go from there. 
+Here's a little preliminary study that I initially used to look into the 16S sequences using ape to calculate a p-distance matrix, pull out the max p-value to get an idea of what tree-building method would be appropriate, and go from there. 
 
 ```
+library(ape)
+library(dplyr)
+library(tidyverse)
+
+setwd("")
+
+#load alignment
+seqsCombined <- read.dna("16S_23S_al.afa", format = "fasta")
+
+#trim gaps (all)
+seqsCombined < del.colgapsonly(seqsCombined)
+
+#find p-distances
+distmxCombined <- dist.dna(seqsCombined, model = "raw") 
+#as matric and view
+distmxtpCombined <- dist.dna(seqsCombined, model = "raw", as.matrix = TRUE) 
+distmxtpCombined
+
+#max p-distance?
+maxpCombined <- max(as.numeric(unlist(distmxtpCombined)))
+maxpCombined
+
+#TN93 tree
+
+distmxTNCombined <- dist.dna(seqsCombined, model = "TN93") 
+
+#neighbor joining
+njCombined <- nj(distmxTNCombined)
+
+#root tree with outgroup
+njCombinedRooted <- root(njCombined, outgroup = "Chloroflexus_aggregans_combinedS", resolve.root = TRUE)
+#check it's rooted
+is.rooted(njCombinedRooted)
+
+#a tibble tree, another tree format used in ape and R packages
+njtibble <- as_tibble(njCombinedRooted)
+njtibble
+
+#write Newick to file
+write.tree(njCombinedRooted,file="NewickExample.txt")
+
+#couple plot formats
+plot(njCombinedRooted, "f", use.edge.length = FALSE, xpd = TRUE, no.margin = FALSE)
+plot(njCombinedRooted,"p", use.edge.length = TRUE, xpd = TRUE, no.margin = FALSE)
 
 ```
