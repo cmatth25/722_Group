@@ -19,7 +19,7 @@ for file in *S.fna; do echo "${file}" | tr '\n' '\t'; grep '^>' ${file} | wc -l 
 ```
 Alright, let's concatenate
 ```
-for file in `ls *_16S.fna | sed 's/_16S.fna//g'`; do paste -d'\0' ${file}_16S.fna  ${file}_23S.fna > ${file}_combinedS.fna; done
+for file in `ls *_16S.fna`; do paste -d'\0' ${file::-8}_16S.fna  ${file::-8}_23S.fna > ${file::-8}_combinedS.fna; done
 ```
 ```
 mkdir 16S_23S/
