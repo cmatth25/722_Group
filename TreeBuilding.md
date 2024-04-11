@@ -7,12 +7,13 @@
 #### Sequences for alignment (or not)
 
 Remember using 16S in the metagenomics tutorial for microbial identification? It's a great ortholog for phylogenetic tree making for the same reason. Carl Woese famously used 16S to differentiate between Bacteria and Archea using 16S and used the small rRNA subunit more generally to propose the above Tree of Life.
+
 Let's retrieve some 16S sequences from experimental isolates and some related type strains to get a better idea what we're working with and where they fall in the Actinobacterial tree. Oftentimes, when we're dealing with species and especially at the strain level, 16S just isn't enough (and I can confirm it simply isn't here either), so let's get 23S, part of the large ribosomal subunit, and concatenate the sequences for a multigene alignment.  Here's a link to some rRNA sequences.
 
 ```
 ln -s /2/scratch/CraigM/Group/test .
 ```
-Lets check to make sure we've only got 1 sequence (sometimes barrnap isolates multiple rRNA sequences) in each file. While we're at it, let's check they're about the right length, 16S is ~1.5 kb and 23S is ~3 kb with some variability
+Lets check to make sure we've only got 1 sequence (barrnap may isolates multiple rRNA sequences) in each file. While we're at it, let's check they're about the right length, 16S is ~1.5 kb and 23S is ~3 kb with some variability.
 ```
 for file in *S.fna; do echo "${file}" | tr '\n' '\t'; grep '^>' ${file} | wc -l | tr '\n' '\t';  grep -v '^>' ${file} | wc -c; done
 ```
@@ -166,12 +167,13 @@ mkdir trees
 ```
 First, let's test some of our tree building assumptions. I went through the MFP mode of iqtree that picks the best model for you based on log-liklihood scores and the Bayesian information criterion, which I won't get into. We can discuss the model it chose after.
 
-While good, tree building assumptions are TRSH: treelikeness(bases descend from the same bifurcating tree), reversibility (mutations are just as likely to occur in reverse), stationarity (base frequencies remain constant) and homogeneity (subsitution rates remain constant).
+While good, tree building assumptions are TRSH: treelikeness(bases descend from the same bifurcating tree), reversibility (mutations are just as likely to occur in reverse), stationarity (base frequencies remain constant) and homogeneity (subsitution rates remain constant). Here we use iqtree2's symtest to test for homogeneity and stationarity.
+sym tests both, marginal symmetry tests stationarity and internal symmetry tests homogeneity.
 
 ```
  /usr/local-centos6/iqtree/version2.2/iqtree2 -s SNPs_in_majority0.75_matrix.fasta -m GTR+ASC+R2 -b 20 --symtest-only 
 ```
-
+If you have bad data that you feel you need to include, the suggestion is test the results with and without the bad data to ensure they're consistent.
 ```
 cat SNPs_in_majority0.75_matrix.fasta.symtest.csv
 ```
@@ -225,7 +227,7 @@ less 16S_23S_trimal.afa.iqtree
 
 #### rRNA retrieval by barrnap
 
-This tool is available on compute canada and runs very quickly, extracting prokaryotic or eukaryotic rRNA sequences from unannotated genomes, outputting .gff or .fasta files. Here's a bas
+This tool is available on compute canada and runs very quickly, extracting prokaryotic or eukaryotic rRNA sequences from unannotated genomes, outputting .gff or .fasta files. Here's a bash script that would work in compute canada. If your genome is annotated already, you can use faidx from samtools to extract your GOI from known ranges. Which yuou should be able to do in info.
 
 ```
 #!/bin/bash
@@ -252,7 +254,7 @@ mv *S.fna 16_23S/
 
 #### GOI
 
-If you're looking for something else, there may be a specific tool similar to barrnap. Alternatively, if your genome is annotated you can usefaidx.
+If you're looking for something else, there may be a specific tool similar to barrnap. 
 
 First search gff or other annotation file for your GOI
 ```
