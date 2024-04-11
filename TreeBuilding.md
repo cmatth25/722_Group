@@ -252,18 +252,6 @@ mv *S.fna 16_23S/
 
 ```
 
-#### GOI
-
-If you're looking for something else, there may be a specific tool similar to barrnap. 
-
-First search gff or other annotation file for your GOI
-```
-
-```
-```
-{faidx -}
-```
-
 
 ##### whole genome example using the tools covered here
 
