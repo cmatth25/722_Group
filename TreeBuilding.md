@@ -49,6 +49,11 @@ Let's pull them together into a multi-fasta file simply using cat, align them wi
 ```
 cat *dS.fna > 16S_23S_multi.fna
 ```
+We can take a closer look and make sure we've got everything expected before align.
+```
+grep '^>' 16S_23S_multi.fna
+```
+
 ```
 /usr/local-centos6/clustal/clustalo_1.2.4 -i 16S_23S_multi.fna --outfmt=fa -o 16S_23S_al.afa
 ```
@@ -75,7 +80,7 @@ OR
 
 #### SNP identification
 
-Alignments are great and there are various packages to pull out SNPs from alignments or compared to a reference sequence (we'll plug that alignment in a little later) but what if we want to compare the genomes of organisms where alignments aren't reliable? Microbial genomes are rife HGT, making alignments difficult or computationally expensive. How do we identify orthologs or SNPs?
+Alignments are great and there are various packages to identify SNPs such as SNP-sites to pull SNPs out of the alignment, or snippy to pull out SNPs compared to a reference genome. We're going to move on from alignments, I hope you learned something about them (you can plug that alignment in a little later if there's time) but what if we want to compare the genomes of organisms where alignments aren't reliable? Microbial genomes are rife HGT, making alignments difficult or computationally expensive. How do we identify orthologs or SNPs?
 
 Hopefully everyone remembers k-mers from the first metagenomics tutorial. Where kraken used exact k-mer matches (k-mer length 35) to classify sequences to a taxonomic rank based on a database, here kSNP uses split k-mers.
 
@@ -88,7 +93,7 @@ AAAA**G**AAAA
 
 The appropriate k-mer length isn't necessarily straightforward, but kSNP provides a tool, Kchooser, to search for the optimal length for your sequences and to assess the FCK, fraction of core k-mers. Core k-mers are those that appear in all of your sequences and reflects the diversity of samples, and the fraction of core k-mers is the core k-mers/all k-mers. Low FCK scores means your samples are very diverse. The higher the FCK, the more reliable your kSNP tree will be.
 
-Note, kSNP4.1pgk needs adding to path to use Kchooser because it is "a stupid program". An opinion I'm coming around on, honestly. 
+Note, kSNP4.1pgk needs adding to path to use Kchooser because it is a stupid program.
 
 It is our last class and Ben mentioned showing the class adding a vairable to the path so...
 
@@ -99,7 +104,7 @@ cat ~/.bash_profile
 ```
 now we can add kSNP to your path
 ```
-echo 'export PATH=/usr/local/kSNP/kSNP4.1pkg:$PATH' >>~/.bash_profile
+echo 'export PATH=/usr/local/kSNP/kSNP4.1pkg:$PATH' >> ~/.bash_profile
 ```
 ">>" to append is VERY important here. When in doubt, use your text editor of choice so you don't accidently mess **everything** up.
 
