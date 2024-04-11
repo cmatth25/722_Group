@@ -38,7 +38,7 @@ An alternative aggregate method, building a concensus tree, would take many orth
 Back to the point, let's rename the fasta headers to make our final labels easier. This makes things easier for the sake of labelling but is not necessarily advisable since you may be losing some information, but since the paste function to add 16S and 23S together messed it up anyways, you might at least want to re add accurate metadata.
 
 ```
-for file in *dS.fna; do sed -i "s/.*/>${file%_combinedS.fna}/" $file; done
+for file in *dS.fna; do sed -i "1s/.*/>${file%_combinedS.fna}/" $file; done
 ```
 ```
 head -n1 SID10270_combinedS.fna
