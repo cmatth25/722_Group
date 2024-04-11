@@ -22,11 +22,9 @@ Alright, let's concatenate... using paste
 for file in `ls *_16S.fna`; do paste -d'\0' ${file::-8}_16S.fna  ${file::-8}_23S.fna > ${file::-8}_combinedS.fna; done
 ```
 ```
-mkdir 16S_23S/
+mkdir 16S_23S/ ; mv *dS.fna 16S_23S/; cd 16S_23S/
 ```
-```
-mv *dS.fna 16S_23S/; cd 16S_23S/
-```
+
 Might be worth checking that you've got your sequences together and they're all about ~4.5 kb using the same script as before.
 
 This could be done for many such selected marker genes, or some alignments take the entire CDS translated into AA sequences. 
