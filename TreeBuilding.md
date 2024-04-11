@@ -73,11 +73,6 @@ There are plenty of good ways to handle gaps but since we concatenated 2 genes, 
 #trimal
 /usr/local-centos6/trimAl/trimAlv1.4/source/trimal -in 16S_23S_al.afa -out 16S_23S_trimal.afa -fasta -gt 0.25
 ```
-OR
-```
-#Gblocks
-/usr/local-centos6/Gblocks/Gblocks
-```
 
 #### SNP identification
 
@@ -336,6 +331,7 @@ write.tree(njCombinedRooted,file="NewickExample.txt")
 
 #couple plot formats
 plot(njCombinedRooted, "f", use.edge.length = FALSE, xpd = TRUE, no.margin = FALSE)
+
 plot(njCombinedRooted,"p", use.edge.length = TRUE, xpd = TRUE, no.margin = FALSE)
 
 ```
