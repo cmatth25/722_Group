@@ -6,12 +6,18 @@
 
 ### Sequences for alignment (or not)
 
+
 #### please log into info2020
 
+download iTOL_*_test.txt annotation files during the break, just to speed things along.
 
-Remember using 16S in the metagenomics tutorial for microbial identification? It's a great ortholog for phylogenetic analysis for the same reason. Carl Woese famously used 16S to differentiate between Bacteria and Archea and used the small rRNA subunit more generally to propose the above Tree of Life.
+Remember using 16S in the metagenomics tutorial for microbial identification with the 9 hypervariable regions? It's a great ortholog for phylogenetic analysis for the same reason. Carl Woese famously used 16S to differentiate between Bacteria and Archea and used the small rRNA subunit more generally to propose the above Tree of Life.
+
 
 Let's retrieve some 16S sequences from experimental isolates and some related type strains to get a better idea what we're working with and where they fall in the Actinobacterial tree. Oftentimes, when we're dealing with species and especially at the strain level, 16S just isn't enough (and I can confirm it simply isn't here either), so let's get 23S, part of the large ribosomal subunit, and concatenate the sequences for a multigene alignment.  Here's a link to some rRNA sequences.
+
+![image](https://github.com/cmatth25/722_Group/assets/101157734/0abee496-b2d6-4a1c-a214-a4be04693258)
+<sub><sup>Li, D., Leahy, S., Henderson, G. et al. Ann Microbiol 64, 1623–1631 (2014). https://doi.org/10.1007/s13213-014-0806-2 <sub><sup> 
 
 We're going to start with pulling together an alignment, although it's ultimately not necessary for the SNP tree we'll be building.
 
@@ -21,6 +27,11 @@ mkdir trees ; cd trees
 ```
 ln -s /2/scratch/CraigM/Group/test/*.fna . 
 ```
+let's see how many sequences we've got
+```
+ls *_16S.fna | wc -l
+```
+
 Lets check to make sure we've only got 1 sequence (barrnap may isolates multiple rRNA sequences) in each file. While we're at it, let's check they're about the right length, 16S is ~1.5 kb and 23S is ~3 kb with some variability.
 ```
 for file in *S.fna; do echo "${file}" | tr '\n' '\t'; grep '^>' ${file} | wc -l | tr '\n' '\t';  grep -v '^>' ${file} | wc -c; done
@@ -36,9 +47,9 @@ It might be worth checking that you've got your sequences together and they're a
 
 This could be done for many such selected marker genes, or some alignments take the entire CDS translated into AA sequences. 
 
-An alternative aggregate method, building a concensus tree, would take many orthologous genes, construct trees from each gene, and the final tree would be the result of the plurality "vote" from each gene tree, but we would want many more than 2. 
+An alternative aggregate method, building a concensus tree, would take many orthologous genes, construct trees from each gene, and the final tree would be the result of the plurality "vote" from each gene tree, but we would want many more than 2. My understanding is this isn't as popular. We'll leave aggregate models to Machine Learning for now. 
 
-Back to the point, let's rename the fasta headers to make our final labels easier. This makes things easier for the sake of labelling but is not necessarily advisable since you may be losing some information, but since the paste function to add 16S and 23S together messed it up anyways, you might at least want to re add accurate metadata.
+Back to the point, let's rename the fasta headers to make our final labels easier. This makes things easier for the sake of labelling but is not necessarily advisable since you may be losing some information in the headers, but the headers weren't particularly informative before and the paste function to add 16S and 23S together messed it up anyways, but you might at least want to re add accurate metadata.
 
 ```
 head -n1 SID10270_combinedS.fna
@@ -51,14 +62,17 @@ head -n1 SID10270_combinedS.fna
 ```
 If you want a better idea of how I extracted these sequences from unannotated genome assemblies, check out the Appendix.
 
-Let's pull them together into a multi-fasta file simply using cat, align them with clustalo omega (various aligners such as muscle or mafft could work here but take a bit longer) and take a look.  
+#### alignment
+This part isn't exactly necessary for the tree we'll be building, but I thought it would be a good little exercise. We've got an hour to kill here after all. We can use it later if there's enough time.
+
+Let's pull them together into a multi-fasta file simply using cat, align them with clustal omega (various aligners such as muscle or mafft could work here) and take a look.  
 
 ```
 cat *dS.fna > 16S_23S_multi.fna
 ```
 We can take a closer look and make sure we've got everything expected before align.
 ```
-grep '^>' 16S_23S_multi.fna
+grep '^>' 16S_23S_multi.fna | wc -l
 ```
 ```
 /usr/local-centos6/clustal/clustalo_1.2.4 -i 16S_23S_multi.fna --outfmt=fa -o 16S_23S_al.afa
@@ -86,7 +100,7 @@ The modern software packages for phylogenetics have plenty of good ways to handl
 
 Alignments are great and there are various packages to identify SNPs such as SNP-sites to pull SNPs out of the alignment, or snippy to pull out SNPs compared to a reference genome. We're going to move on from alignments, I hope you learned something about them (you can plug that alignment in a little later if there's time) but what if we want to compare the genomes of organisms where alignments aren't reliable? Microbial genomes are rife HGT, making alignments difficult or computationally expensive. How do we identify orthologs or SNPs?
 
-Hopefully everyone remembers k-mers from the first metagenomics tutorial. Where kraken used exact k-mer matches (k-mer length 35) to classify sequences to a taxonomic rank based on a database, here kSNP uses split k-mers.
+Another call back to the first Group tutorial. Hopefully everyone remembers k-mers from the first metagenomics tutorial. Where kraken used exact k-mer matches (k-mer length 35) to classify sequences to a taxonomic rank based on a database, here kSNP uses split k-mers.
 
 kSNP finds all kmers of k length for each sequence and identifies kmers that differ at exactly the mid-point. k=9 example below.
 
@@ -95,7 +109,7 @@ AAAA**T**AAAA
 >seq2  
 AAAA**G**AAAA  
 
-The appropriate k-mer length isn't necessarily straightforward, but kSNP provides a tool, Kchooser, to search for the optimal length for your sequences and to assess the FCK, fraction of core k-mers. Core k-mers are those that appear in all of your sequences and reflects the diversity of samples, and the fraction of core k-mers is the core k-mers/all k-mers. Low FCK scores means your samples are very diverse. The higher the FCK, the more reliable your kSNP tree will be.
+The appropriate k-mer length isn't necessarily straightforward, but kSNP provides a tool, Kchooser, to search for the optimal length for your sequences and to assess the FCK, fraction of core k-mers. Core k-mers are those that appear in all of your sequences and FCK reflects the diversity of samples, and the fraction of core k-mers is the core k-mers/all k-mers id'd. Low FCK scores means your samples are very diverse. The higher the FCK, the more reliable your kSNP tree will be.
 
 Note, kSNP4.1pgk needs adding to path to use Kchooser because it is a stupid program.
 
