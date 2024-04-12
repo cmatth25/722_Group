@@ -9,9 +9,11 @@
 #### please log into info2020
 
 
-Remember using 16S in the metagenomics tutorial for microbial identification? It's a great ortholog for phylogenetic tree making for the same reason. Carl Woese famously used 16S to differentiate between Bacteria and Archea using 16S and used the small rRNA subunit more generally to propose the above Tree of Life.
+Remember using 16S in the metagenomics tutorial for microbial identification? It's a great ortholog for phylogenetic analysis for the same reason. Carl Woese famously used 16S to differentiate between Bacteria and Archea and used the small rRNA subunit more generally to propose the above Tree of Life.
 
 Let's retrieve some 16S sequences from experimental isolates and some related type strains to get a better idea what we're working with and where they fall in the Actinobacterial tree. Oftentimes, when we're dealing with species and especially at the strain level, 16S just isn't enough (and I can confirm it simply isn't here either), so let's get 23S, part of the large ribosomal subunit, and concatenate the sequences for a multigene alignment.  Here's a link to some rRNA sequences.
+
+We're going to start with pulling together an alignment, although it's ultimately not necessary for the SNP tree we'll be building.
 
 ``` 
 mkdir trees ; cd trees
@@ -23,20 +25,18 @@ Lets check to make sure we've only got 1 sequence (barrnap may isolates multiple
 ```
 for file in *S.fna; do echo "${file}" | tr '\n' '\t'; grep '^>' ${file} | wc -l | tr '\n' '\t';  grep -v '^>' ${file} | wc -c; done
 ```
-Alright, let's concatenate... using paste
+Alright, let's concatenate... using paste. This code will concatentate the same line numbers together. Putting 23S directly following 16S. Then we'll move the combined sequences to a new directory.
 ```
 for file in `ls *_16S.fna | sed 's/_16S.fna@//g' `; do paste -d'\0' ${file}_16S.fna  ${file}_23S.fna > ${file}_combinedS.fna; done
 ```
 ```
 mkdir 16S_23S/ ; mv *dS.fna 16S_23S/; cd 16S_23S/
 ```
-
-Might be worth checking that you've got your sequences together and they're all about ~4.5 kb using the same script as before.
+It might be worth checking that you've got your sequences together and they're all about ~4.5 kb using the same script as before.
 
 This could be done for many such selected marker genes, or some alignments take the entire CDS translated into AA sequences. 
 
-An alternative aggregate method, building a concensus tree, would take many orthologous genes, construct trees from each gene, and the final tree would be the result of the plurality "vote" from each gene tree, but we would want many more than 2. Many tree building packages will pull out coding sequences from annotated genomes and allow for concatenated or concensus multigene trees. 
-
+An alternative aggregate method, building a concensus tree, would take many orthologous genes, construct trees from each gene, and the final tree would be the result of the plurality "vote" from each gene tree, but we would want many more than 2. 
 
 Back to the point, let's rename the fasta headers to make our final labels easier. This makes things easier for the sake of labelling but is not necessarily advisable since you may be losing some information, but since the paste function to add 16S and 23S together messed it up anyways, you might at least want to re add accurate metadata.
 
@@ -51,7 +51,7 @@ head -n1 SID10270_combinedS.fna
 ```
 If you want a better idea of how I extracted these sequences from unannotated genome assemblies, check out the Appendix.
 
-Let's pull them together into a multi-fasta file simply using cat, align them with mafft (various aligners such as muscle or clustal could work here but take a bit longer) and take a look.  
+Let's pull them together into a multi-fasta file simply using cat, align them with clustalo omega (various aligners such as muscle or mafft could work here but take a bit longer) and take a look.  
 
 ```
 cat *dS.fna > 16S_23S_multi.fna
@@ -60,20 +60,23 @@ We can take a closer look and make sure we've got everything expected before ali
 ```
 grep '^>' 16S_23S_multi.fna
 ```
-
 ```
 /usr/local-centos6/clustal/clustalo_1.2.4 -i 16S_23S_multi.fna --outfmt=fa -o 16S_23S_al.afa
 ```
-
 You'll want to note that whether you have phylip or fasta alignments, if your sequences didn't already have line breaks, they will now. 
 
-Taking a closer look at the alignment, you'll see things get a bit messy at either end and where the genes have been concatenated together.
+Here's an example of the slightly unwieldy phy alignment format. It only allows 10 character labels, cutting off the labels I spent all that time preparing.
+
+![image](https://github.com/cmatth25/722_Group/assets/101157734/28857fc8-9fbd-4422-90a0-4c3aba2e4345)
+
+
+Taking a closer look at the alignment, you'll see things get a bit messy at either end and where the genes have been concatenated together around 1550.
 
 ```
 less 16S_23S_al.afa
 ```
 
-There are plenty of good ways to handle gaps but since we concatenated 2 genes, and things can get a little messy at either end, I'd like to remove the heavily gapped areas them with trimAl. GBlocks is a more interactive alternative, if that's for you.
+The modern software packages for phylogenetics have plenty of good ways to handle gaps but since we concatenated 2 genes, and things can get a little messy at either end, I'd like to remove the heavily gapped areas them with trimAl. 
 
 ```
 /usr/local-centos6/trimAl/trimAlv1.4/source/trimal -in 16S_23S_al.afa -out 16S_23S_trimal.afa -fasta -gt 0.25
@@ -127,8 +130,6 @@ now Kchooser can tell us what k-mer value to use and whether or not it's a good 
 ```
 /usr/local/kSNP/kSNP4.1pkg/Kchooser4 -in kSNP_input.txt
 ```
-
-I seem to remember being told this is a bad idea before, but I think that was before I ran any code at all. Alas, we carry on. 
 
 kSNP will build a tree for us, which is great to get an idea of what the tree looks like, but it doesn't provide much in the way of tree building options or any visualization.
 ```
