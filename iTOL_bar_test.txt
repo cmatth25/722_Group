@@ -21,7 +21,7 @@ Pseudonocardia_sp_EC080610-09,4
 Micromonospora_echinospora,7
 SID11719,5
 SID8012,6
-Streptomyces_albu,11
+Streptomyces_albus,11
 SID7965,18
 SID11370,5
 SID7966,16
